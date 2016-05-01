@@ -8,8 +8,17 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import {deepOrange500} from 'material-ui/styles/colors';
 import FlatButton from 'material-ui/FlatButton';
+import CircularProgress from 'material-ui/CircularProgress';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import DashboardComponent from './components/dashboardComponent';
+import FontIcon from 'material-ui/FontIcon';
+var axios = require('axios');
+
+const iconStyles = {
+  marginRight: 24,
+};
+
 
 const styles = {
   container: {
@@ -27,21 +36,38 @@ const muiTheme = getMuiTheme({
 var Main  = React.createClass({
   getInitialState: function () {
     return {
-      open: false
+      open: false,
+      isLoading: true,
+      zones: []
     }
   },
   handleRequestClose() {
     this.setState({
-      open: false,
+      open: false
     });
   },
 
   handleTouchTap: function(e) {
     this.setState({
-      open: true,
+      open: true
     });
   },
 
+  handleZoneReply(data) {
+    console.log(data);
+    this.setState({
+      isLoading: false
+    });
+  },
+  componentDidMount: function() {
+    axios.get('/zones').then(response => {
+      this.setState({
+        isLoading: false,
+        zones: response.data
+      });
+    });
+
+  },
   render() {
     const standardActions = (
         <FlatButton
@@ -54,24 +80,20 @@ var Main  = React.createClass({
     return (
         <MuiThemeProvider muiTheme={muiTheme}>
           <div style={styles.container}>
-            <Dialog
-                open={this.state.open}
-                title="Super Secret Password"
-                actions={standardActions}
-                onRequestClose={this.handleRequestClose}
-            >
-              1-2-3-4-5
-            </Dialog>
-            <h1>material-ui</h1>
-            <h2>example project</h2>
-            <RaisedButton
-                label="Super Secret Password"
-                primary={true}
-                onTouchTap={this.handleTouchTap}
-            />
+            <h1>Sonos ultimate control panel</h1>
+            <h2>Made for the advanced home user</h2>
+            <br/>
+            <DashboardComponent
+            standardActions={standardActions}
+            isLoading={this.state.isLoading}
+            handleTouchTap={this.handleTouchTap}
+            handleRequestClose={this.handleRequestClose}
+            zones={this.state.zones}
+            open={this.state.open}/>
+
           </div>
         </MuiThemeProvider>
-    );
+    )
   }
 });
 
