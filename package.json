@@ -1,14 +1,26 @@
 {
-  "name": "sonos-http-api",
-  "version": "v0.19.0",
+  "name": "sonos-control",
+  "version": "v0.0.1",
   "description": "A simple node app for controlling a Sonos system with basic HTTP requests",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "produdction": "webpack -p"
   },
-  "author": "Jimmy Shimizu <jimmy@shimizu.se>",
+  "author": "Eivind Greve Aubert <eivind.aubert@admirum.no>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jishi/node-sonos-http-api.git"
+    "url": "https://github.com/eivindga/sonos-control.git"
+  },
+  "devDependencies": {
+    "babel-core": "^6.3.26",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-react": "^6.3.13",
+    "html-webpack-plugin": "^2.7.2",
+    "react-hot-loader": "^1.3.0",
+    "transfer-webpack-plugin": "^0.1.4",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
     "async": "~1.5.0",
@@ -16,9 +28,16 @@
     "node-static": "~0.7.0",
     "request-promise": "~1.0.2",
     "require-fu": "~1.0.0",
-    "sonos-discovery": "https://github.com/jishi/node-sonos-discovery/archive/v0.16.4.tar.gz"
+    "sonos-discovery": "https://github.com/jishi/node-sonos-discovery/archive/v0.16.4.tar.gz",
+    "material-ui": "^0.15.0-beta.2",
+    "react": "^15.0.1",
+    "react-dom": "^15.0.1",
+    "react-tap-event-plugin": "^1.0.0"
   },
-  "engines" : { "node" : ">=4.0.0 <6.0.0", "npm" : "^2.0.0" },
+  "engines": {
+    "node": ">=4.0.0 <6.0.0",
+    "npm": "^2.0.0"
+  },
   "main": "lib/sonos-http-api.js",
   "license": "MIT"
 }
