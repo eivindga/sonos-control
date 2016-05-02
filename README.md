@@ -1,8 +1,15 @@
-[![PayPal donate button](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=jimmy%2eshimizu%40gmail%2ecom&lc=SE&item_name=Support%20open%20source%20initiative&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted "Donate once-off to this project using Paypal")
+SONOS CONTROL PANEL
+==============
 
-Feel free to use it as you please. Consider donating if you want to support further development.
+React web gui giving you an improved control over your Sonos system. Typically implementing features that are not available through the default applications. 
 
-SONOS HTTP API
+To access the web gui, go to: http://localhost:5005/
+
+Based on the very nice sonos api project, by jishi. https://github.com/jishi/node-sonos-http-api
+
+
+
+Copied documentation from node-sonos-http-api: 
 ==============
 
 **This application requires node 4.0.0 or higher!**
