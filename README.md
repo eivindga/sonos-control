@@ -9,8 +9,8 @@ Based on the very nice sonos api project, by jishi. https://github.com/jishi/nod
 
 
 
-Copied documentation from node-sonos-http-api: 
-==============
+Documentation from node-sonos-http-api: 
+-----
 
 **This application requires node 4.0.0 or higher!**
 
