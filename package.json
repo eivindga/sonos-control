@@ -24,15 +24,16 @@
   },
   "dependencies": {
     "async": "~1.5.0",
+    "axios": "^0.11.0",
     "basic-auth": "~1.0.3",
-    "node-static": "~0.7.0",
-    "request-promise": "~1.0.2",
-    "require-fu": "~1.0.0",
-    "sonos-discovery": "https://github.com/jishi/node-sonos-discovery/archive/v0.16.4.tar.gz",
     "material-ui": "^0.15.0-beta.2",
+    "node-static": "~0.7.0",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
-    "react-tap-event-plugin": "^1.0.0"
+    "react-tap-event-plugin": "^1.0.0",
+    "request-promise": "~1.0.2",
+    "require-fu": "~1.0.0",
+    "sonos-discovery": "https://github.com/jishi/node-sonos-discovery/archive/v0.16.4.tar.gz"
   },
   "engines": {
     "node": ">=4.0.0 <6.0.0",

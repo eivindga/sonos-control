@@ -1,11 +1,13 @@
 SONOS CONTROL PANEL
 ==============
 
+** Work in progress. Not to be used by any one in its current state. **
+
 React web gui giving you an improved control over your Sonos system. Typically implementing features that are not available through the default applications. 
 
 To access the web gui, go to: http://localhost:5005/
 
-Based on the very nice sonos api project, by jishi. https://github.com/jishi/node-sonos-http-api
+Based on the sonos api project by jishi. https://github.com/jishi/node-sonos-http-api
 
 
 

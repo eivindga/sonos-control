@@ -16,14 +16,14 @@ import FontIcon from 'material-ui/FontIcon';
 var axios = require('axios');
 
 const iconStyles = {
-  marginRight: 24,
+  marginRight: 24
 };
 
 
 const styles = {
   container: {
     textAlign: 'center',
-    paddingTop: 200,
+    paddingTop: 100
   }
 };
 
@@ -38,7 +38,7 @@ var Main  = React.createClass({
     return {
       open: false,
       isLoading: true,
-      zones: []
+      rooms: []
     }
   },
   handleRequestClose() {
@@ -53,19 +53,22 @@ var Main  = React.createClass({
     });
   },
 
-  handleZoneReply(data) {
-    console.log(data);
-    this.setState({
-      isLoading: false
+  handleZoneReply(response) {
+    var rooms = [];
+    response.data.forEach(function(zone) {
+      rooms = rooms.concat(zone.members);
     });
+    return rooms;
   },
   componentDidMount: function() {
-    axios.get('/zones').then(response => {
-      this.setState({
-        isLoading: false,
-        zones: response.data
-      });
-    });
+    axios.get('/zones')
+        .then(this.handleZoneReply)
+        .then(rooms => {
+          this.setState({
+            isLoading: false,
+            rooms: rooms
+          });
+        });
 
   },
   render() {
@@ -80,17 +83,16 @@ var Main  = React.createClass({
     return (
         <MuiThemeProvider muiTheme={muiTheme}>
           <div style={styles.container}>
-            <h1>Sonos ultimate control panel</h1>
-            <h2>Made for the advanced home user</h2>
+            <h1>Sonos control panel</h1>
+            <h2>For the advanced home user</h2>
             <br/>
             <DashboardComponent
             standardActions={standardActions}
             isLoading={this.state.isLoading}
             handleTouchTap={this.handleTouchTap}
             handleRequestClose={this.handleRequestClose}
-            zones={this.state.zones}
+            rooms={this.state.rooms}
             open={this.state.open}/>
-
           </div>
         </MuiThemeProvider>
     )

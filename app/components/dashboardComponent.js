@@ -5,20 +5,22 @@ import Dialog from 'material-ui/Dialog';
 import {deepOrange500} from 'material-ui/styles/colors';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
+import RoomTable from './../roomTable';
 
 function DashboardComponent (props) {
-  console.log(props.zones);
+  console.log(props);
   return props.isLoading === true
       ? <CircularProgress size={2}/>
       :
         <div>
+          <RoomTable rooms={props.rooms} ></RoomTable>
           <Dialog
           open={props.open}
           title="My super dialog"
           actions={props.standardActions}
           onRequestClose={props.handleRequestClose}
         >
-        It's awsome!
+            {JSON.stringify(props.rooms)}
         </Dialog>
         <RaisedButton label="Trigger dialog" primary={true} onTouchTap={props.handleTouchTap} />
 
@@ -31,7 +33,7 @@ DashboardComponent.propTypes = {
   handleRequestClose: PropTypes.func.isRequired,
   standardActions: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
-  zones: PropTypes.array.isRequired
+  rooms: PropTypes.array.isRequired
 };
 
 export default DashboardComponent;
