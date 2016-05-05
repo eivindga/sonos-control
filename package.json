@@ -33,7 +33,7 @@
     "react-tap-event-plugin": "^1.0.0",
     "request-promise": "~1.0.2",
     "require-fu": "~1.0.0",
-    "sonos-discovery": "https://github.com/jishi/node-sonos-discovery/archive/v0.16.4.tar.gz"
+    "sonos-discovery": "git://github.com/eivindga/node-sonos-discovery.git#4375cce373f67d86e06f5fc2a3c3731870aec66d"
   },
   "engines": {
     "node": ">=4.0.0 <6.0.0",
