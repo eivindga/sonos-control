@@ -15,42 +15,15 @@ const styles = {
   }
 };
 
-const tableData = [
-  {
-    name: 'John Smith',
-    status: 'Employed',
-    selected: true,
-  },
-  {
-    name: 'Randal White',
-    status: 'Unemployed',
-  },
-  {
-    name: 'Stephanie Sanders',
-    status: 'Employed',
-    selected: true,
-  },
-  {
-    name: 'Steve Brown',
-    status: 'Employed',
-  },
-  {
-    name: 'Joyce Whitten',
-    status: 'Employed',
-  },
-  {
-    name: 'Samuel Roberts',
-    status: 'Employed',
-  },
-  {
-    name: 'Adam Moore',
-    status: 'Employed',
-  }
-];
-
 var RoomTable = React.createClass({
 
   getInitialState: function () {
+
+    //var roomState = this.props.rooms;
+    //roomState.map((room, index) => (
+    //    room.selected = false
+    //));
+
     return {
       fixedHeader: true,
       stripedRows: false,
@@ -61,7 +34,7 @@ var RoomTable = React.createClass({
       deselectOnClickaway: false,
       showCheckboxes: true,
       width: '4%',
-      rooms: tableData
+      rooms: this.props.rooms
     }
   },
   handleToggle: (event, toggled) => {
@@ -87,9 +60,13 @@ var RoomTable = React.createClass({
                 enableSelectAll={this.state.enableSelectAll}
             >
               <TableRow>
-                <TableHeaderColumn tooltip="The ID">ID</TableHeaderColumn>
-                <TableHeaderColumn tooltip="The Name">Name</TableHeaderColumn>
-                <TableHeaderColumn tooltip="The Status">Status</TableHeaderColumn>
+                <TableHeaderColumn tooltip="The Room">Room</TableHeaderColumn>
+                <TableHeaderColumn tooltip="The Zone Status">Zone Status</TableHeaderColumn>
+                <TableHeaderColumn tooltip="The Volume">Room Volume</TableHeaderColumn>
+                <TableHeaderColumn tooltip="The Volume">Zone Volume</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Room mute">Room Mute</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Zone mute">Zone Mute</TableHeaderColumn>
+                <TableHeaderColumn tooltip="The Zone id">Zone id</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody
@@ -98,16 +75,21 @@ var RoomTable = React.createClass({
                 showRowHover={this.state.showRowHover}
                 stripedRows={this.state.stripedRows}
             >
-              {tableData.map( (row, index) => (
+              {this.state.rooms.map( (row, index) => (
                   <TableRow key={index} selected={row.selected}>
-                    <TableRowColumn>{index}</TableRowColumn>
-                    <TableRowColumn>{row.name}</TableRowColumn>
-                    <TableRowColumn>{row.status}</TableRowColumn>
+                    <TableRowColumn>{row.roomName}</TableRowColumn>
+                    <TableRowColumn>{row.state.zoneState}</TableRowColumn>
+                    <TableRowColumn>{row.state.volume}</TableRowColumn>
+                    <TableRowColumn>{row.groupState.volume}</TableRowColumn>
+                    <TableRowColumn>{JSON.stringify(row.state.mute)}</TableRowColumn>
+                    <TableRowColumn>{JSON.stringify(row.groupState.mute)}</TableRowColumn>
+                    <TableRowColumn>{row.coordinator}</TableRowColumn>
                   </TableRow>
               ))}
             </TableBody>
           </Table>
        </div>
+
     );
   }
 });

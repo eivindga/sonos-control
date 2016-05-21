@@ -15,15 +15,14 @@ function DashboardComponent (props) {
         <div>
           <RoomTable rooms={props.rooms} ></RoomTable>
           <Dialog
-          open={props.open}
+                     open={props.open}
           title="My super dialog"
           actions={props.standardActions}
           onRequestClose={props.handleRequestClose}
-        >
-            {JSON.stringify(props.rooms)}
-        </Dialog>
-        <RaisedButton label="Trigger dialog" primary={true} onTouchTap={props.handleTouchTap} />
-
+          >{JSON.stringify(props.rooms)}
+          </Dialog>
+          <br/>
+          <RaisedButton label="Set max volume" primary={true} onTouchTap={props.handleTouchTap} />
         </div>
 }
 
