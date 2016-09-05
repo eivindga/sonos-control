@@ -1,11 +1,11 @@
 import React from 'react';
-var PropTypes = React.PropTypes;
+
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import {deepOrange500} from 'material-ui/styles/colors';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
-import RoomTable from './../roomTable';
+import RoomTable from '../roomTable';
 
 function DashboardComponent (props) {
   console.log(props);
