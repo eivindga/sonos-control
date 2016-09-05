@@ -27,12 +27,12 @@ function DashboardComponent (props) {
 }
 
 DashboardComponent.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
-  handleTouchTap: PropTypes.func.isRequired,
-  handleRequestClose: PropTypes.func.isRequired,
-  standardActions: PropTypes.object.isRequired,
-  open: PropTypes.bool.isRequired,
-  rooms: PropTypes.array.isRequired
+  isLoading: React.PropTypes.bool.isRequired,
+  handleTouchTap: React.PropTypes.func.isRequired,
+  handleRequestClose: React.PropTypes.func.isRequired,
+  standardActions: React.PropTypes.object.isRequired,
+  open: React.PropTypes.bool.isRequired,
+  rooms: React.PropTypes.array.isRequired
 };
 
 export default DashboardComponent;

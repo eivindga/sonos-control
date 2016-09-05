@@ -38,8 +38,8 @@ var RoomTable = React.createClass({
     }
   },
   handleToggle: (event, toggled) => {
-    this.setState({
-      [event.target.name]: toggled,
+    setState({
+      [event.target.name]: toggled
     });
   },
   handleChange: (event) => {
@@ -53,6 +53,7 @@ var RoomTable = React.createClass({
               fixedHeader={this.state.fixedHeader}
               selectable={this.state.selectable}
               multiSelectable={this.state.multiSelectable}
+              onRowSelection={this.handleToggle}
           >
             <TableHeader
                 displaySelectAll={this.state.showCheckboxes}
