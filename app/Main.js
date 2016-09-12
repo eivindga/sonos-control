@@ -38,7 +38,8 @@ var Main  = React.createClass({
     return {
       open: false,
       isLoading: true,
-      rooms: []
+      rooms: [],
+      maxVolume: 100
     }
   },
   handleRequestClose() {
@@ -46,11 +47,48 @@ var Main  = React.createClass({
       open: false
     });
   },
+  handleUpdateVolume(event, index, value) {
+    var selectedRoom = this.state.rooms.find(function(room) {
+      return room.selected;
+    });
+    if (selectedRoom) {
+      if (value == 100) {
+        axios.get('/' + selectedRoom.roomName + '/clearmaxvolume')
+            .then(
+                this.setState({
+                      open: false
+                    }
+                ));
+      } else {
+        axios.get('/' + selectedRoom.roomName + '/setmaxvolume/' + value)
+            .then(this.setState({
+              open: false
+            }));
+      }
+    }
+    console.log("event: ", event);
+    console.log("index: ", index);
+    console.log("value: ", value);
+  },
+  openDialogFn: function(e) {
+    var selectedRoom = this.state.rooms.find(function (row) {
+      return row.selected;
+    });
+    if (selectedRoom) {
+      axios.get('/' + selectedRoom.roomName + '/getmaxvolume')
+          .then(response => {
+            this.setState({
+              maxVolume: response.data,
+              open: true
+            });
+          })
+    }
 
-  handleTouchTap: function(e) {
+/*
     this.setState({
       open: true
     });
+    */
   },
 
   handleZoneReply(response) {
@@ -72,27 +110,21 @@ var Main  = React.createClass({
 
   },
   render() {
-    const standardActions = (
-        <FlatButton
-            label="Ok"
-            secondary={true}
-            onTouchTap={this.handleRequestClose}
-        />
-    );
 
     return (
         <MuiThemeProvider muiTheme={muiTheme}>
           <div style={styles.container}>
             <h1>Sonos control panel</h1>
-            <h2>For the advanced home user</h2>
+            <h2>For those missing features</h2>
             <br/>
             <DashboardComponent
-            standardActions={standardActions}
             isLoading={this.state.isLoading}
-            handleTouchTap={this.handleTouchTap}
+            handleTouchTap={this.openDialogFn}
             handleRequestClose={this.handleRequestClose}
+            handleUpdateVolume={this.handleUpdateVolume}
             rooms={this.state.rooms}
-            open={this.state.open}/>
+            open={this.state.open}
+            maxVolume={this.state.maxVolume}/>
           </div>
         </MuiThemeProvider>
     )

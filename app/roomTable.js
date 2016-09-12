@@ -27,8 +27,8 @@ export default class RoomTable extends React.Component {
             stripedRows: false,
             showRowHover: true,
             selectable: true,
-            multiSelectable: true,
-            enableSelectAll: true,
+            multiSelectable: false,
+            enableSelectAll: false,
             deselectOnClickaway: false,
             showCheckboxes: true,
             width: '4%',
@@ -38,23 +38,17 @@ export default class RoomTable extends React.Component {
 
     handleSelection = (selectedRows) => {
         var rooms = this.state.rooms;
-        if (selectedRows == 'all') {
         rooms = rooms.map(function(item, index) {
-          item.selected = true;
+            if (selectedRows.indexOf(index) != -1) {
+                item.selected = true;
+            } else {
+                item.selected = false;
+            }
             return item;
         });
-        } else {
-            rooms = rooms.map(function(item, index) {
-                if (selectedRows.indexOf(index) != -1) {
-                    item.selected = true;
-                }
-                return item;
-            })
-        }
         this.setState({
             rooms: rooms
         });
-    //      console.log("this row was selected: " + selectedRows);
     };
 
     handleToggle = (event, toggled) =>{

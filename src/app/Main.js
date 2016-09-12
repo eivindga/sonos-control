@@ -28,7 +28,7 @@ class Main extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.handleRequestClose = this.handleRequestClose.bind(this);
-    this.handleTouchTap = this.handleTouchTap.bind(this);
+    this.openDialogFn = this.openDialogFn.bind(this);
 
     this.state = {
       open: false,
@@ -72,7 +72,7 @@ class Main extends React.Component {
           <RaisedButton
             label="Super Secret Password"
             primary={true}
-            onTouchTap={this.handleTouchTap}
+            onTouchTap={this.openDialogFn}
           />
         </div>
       </MuiThemeProvider>

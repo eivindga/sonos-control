@@ -21878,7 +21878,7 @@
 	 * which incorporates components providedby material-ui.
 	 */
 
-	var axios = __webpack_require__(442);
+	var axios = __webpack_require__(443);
 
 	var iconStyles = {
 	  marginRight: 24
@@ -21904,7 +21904,8 @@
 	    return {
 	      open: false,
 	      isLoading: true,
-	      rooms: []
+	      rooms: [],
+	      maxVolume: 100
 	    };
 	  },
 	  handleRequestClose: function handleRequestClose() {
@@ -21912,12 +21913,46 @@
 	      open: false
 	    });
 	  },
-
-
-	  handleTouchTap: function handleTouchTap(e) {
-	    this.setState({
-	      open: true
+	  handleUpdateVolume: function handleUpdateVolume(event, index, value) {
+	    var selectedRoom = this.state.rooms.find(function (room) {
+	      return room.selected;
 	    });
+	    if (selectedRoom) {
+	      if (value == 100) {
+	        axios.get('/' + selectedRoom.roomName + '/clearmaxvolume').then(this.setState({
+	          open: false
+	        }));
+	      } else {
+	        axios.get('/' + selectedRoom.roomName + '/setmaxvolume/' + value).then(this.setState({
+	          open: false
+	        }));
+	      }
+	    }
+	    console.log("event: ", event);
+	    console.log("index: ", index);
+	    console.log("value: ", value);
+	  },
+
+	  openDialogFn: function openDialogFn(e) {
+	    var _this = this;
+
+	    var selectedRoom = this.state.rooms.find(function (row) {
+	      return row.selected;
+	    });
+	    if (selectedRoom) {
+	      axios.get('/' + selectedRoom.roomName + '/getmaxvolume').then(function (response) {
+	        _this.setState({
+	          maxVolume: response.data,
+	          open: true
+	        });
+	      });
+	    }
+
+	    /*
+	        this.setState({
+	          open: true
+	        });
+	        */
 	  },
 
 	  handleZoneReply: function handleZoneReply(response) {
@@ -21929,21 +21964,16 @@
 	  },
 
 	  componentDidMount: function componentDidMount() {
-	    var _this = this;
+	    var _this2 = this;
 
 	    axios.get('/zones').then(this.handleZoneReply).then(function (rooms) {
-	      _this.setState({
+	      _this2.setState({
 	        isLoading: false,
 	        rooms: rooms
 	      });
 	    });
 	  },
 	  render: function render() {
-	    var standardActions = _react2.default.createElement(_FlatButton2.default, {
-	      label: 'Ok',
-	      secondary: true,
-	      onTouchTap: this.handleRequestClose
-	    });
 
 	    return _react2.default.createElement(
 	      _MuiThemeProvider2.default,
@@ -21959,16 +21989,17 @@
 	        _react2.default.createElement(
 	          'h2',
 	          null,
-	          'For the advanced home user'
+	          'For those missing features'
 	        ),
 	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(_dashboardComponent2.default, {
-	          standardActions: standardActions,
 	          isLoading: this.state.isLoading,
-	          handleTouchTap: this.handleTouchTap,
+	          handleTouchTap: this.openDialogFn,
 	          handleRequestClose: this.handleRequestClose,
+	          handleUpdateVolume: this.handleUpdateVolume,
 	          rooms: this.state.rooms,
-	          open: this.state.open })
+	          open: this.state.open,
+	          maxVolume: this.state.maxVolume })
 	      )
 	    );
 	  }
@@ -33676,10 +33707,6 @@
 
 	var _colors = __webpack_require__(215);
 
-	var _FlatButton = __webpack_require__(216);
-
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-
 	var _CircularProgress = __webpack_require__(219);
 
 	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
@@ -33702,9 +33729,10 @@
 	    _react2.default.createElement(_limitDialog2.default, {
 	      handleTouchTap: props.handleTouchTap,
 	      handleRequestClose: props.handleRequestClose,
+	      handleUpdateVolume: props.handleUpdateVolume,
 	      open: props.open,
 	      rooms: props.rooms,
-	      standardActions: props.standardActions
+	      maxVolume: props.maxVolume
 	    }),
 	    _react2.default.createElement('br', null),
 	    _react2.default.createElement(_RaisedButton2.default, { label: 'Set max volume', primary: true, onTouchTap: props.handleTouchTap })
@@ -33715,8 +33743,9 @@
 	  isLoading: _react2.default.PropTypes.bool.isRequired,
 	  handleTouchTap: _react2.default.PropTypes.func.isRequired,
 	  handleRequestClose: _react2.default.PropTypes.func.isRequired,
-	  standardActions: _react2.default.PropTypes.object.isRequired,
+	  handleUpdateVolume: _react2.default.PropTypes.func.isRequired,
 	  open: _react2.default.PropTypes.bool.isRequired,
+	  maxVolume: _react2.default.PropTypes.number.isRequired,
 	  rooms: _react2.default.PropTypes.array.isRequired
 	};
 
@@ -33779,23 +33808,17 @@
 
 	        _this.handleSelection = function (selectedRows) {
 	            var rooms = _this.state.rooms;
-	            if (selectedRows == 'all') {
-	                rooms = rooms.map(function (item, index) {
+	            rooms = rooms.map(function (item, index) {
+	                if (selectedRows.indexOf(index) != -1) {
 	                    item.selected = true;
-	                    return item;
-	                });
-	            } else {
-	                rooms = rooms.map(function (item, index) {
-	                    if (selectedRows.indexOf(index) != -1) {
-	                        item.selected = true;
-	                    }
-	                    return item;
-	                });
-	            }
+	                } else {
+	                    item.selected = false;
+	                }
+	                return item;
+	            });
 	            _this.setState({
 	                rooms: rooms
 	            });
-	            //      console.log("this row was selected: " + selectedRows);
 	        };
 
 	        _this.handleToggle = function (event, toggled) {
@@ -33812,8 +33835,8 @@
 	            stripedRows: false,
 	            showRowHover: true,
 	            selectable: true,
-	            multiSelectable: true,
-	            enableSelectAll: true,
+	            multiSelectable: false,
+	            enableSelectAll: false,
 	            deselectOnClickaway: false,
 	            showCheckboxes: true,
 	            width: '4%',
@@ -38971,11 +38994,15 @@
 
 	var _Table = __webpack_require__(377);
 
+	var _FlatButton = __webpack_require__(216);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
 	var _SelectField = __webpack_require__(412);
 
 	var _SelectField2 = _interopRequireDefault(_SelectField);
 
-	var _MenuItem = __webpack_require__(460);
+	var _MenuItem = __webpack_require__(442);
 
 	var _MenuItem2 = _interopRequireDefault(_MenuItem);
 
@@ -38986,6 +39013,8 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var axios = __webpack_require__(443);
 
 	var styles = {
 	    customWidth: {
@@ -39005,13 +39034,18 @@
 	            return _this.setState({ value: value });
 	        };
 
-	        _this.state = { value: 100 };
+	        _this.state = { value: props.maxVolume };
 	        return _this;
 	    }
 
 	    _createClass(LimitDialog, [{
 	        key: 'render',
 	        value: function render() {
+	            var actions = [_react2.default.createElement(_FlatButton2.default, {
+	                label: 'Close',
+	                primary: true,
+	                onTouchTap: this.props.handleRequestClose
+	            })];
 	            return _react2.default.createElement(
 	                'div',
 	                null,
@@ -39019,7 +39053,7 @@
 	                    _Dialog2.default,
 	                    { open: this.props.open,
 	                        title: 'Set max volume limit',
-	                        actions: this.props.standardActions,
+	                        actions: actions,
 	                        onRequestClose: this.props.handleRequestClose
 	                    },
 	                    _react2.default.createElement(
@@ -39086,8 +39120,8 @@
 	                    _react2.default.createElement(
 	                        _SelectField2.default,
 	                        {
-	                            value: this.state.value,
-	                            onChange: this.handleChange,
+	                            value: this.props.maxVolume,
+	                            onChange: this.props.handleUpdateVolume,
 	                            style: styles.customWidth,
 	                            floatingLabelText: 'Do not allow volume above' },
 	                        _react2.default.createElement(_MenuItem2.default, { value: 100, primaryText: 'No limit' }),
@@ -39116,9 +39150,10 @@
 	LimitDialog.propTypes = {
 	    handleTouchTap: _react2.default.PropTypes.func.isRequired,
 	    handleRequestClose: _react2.default.PropTypes.func.isRequired,
-	    standardActions: _react2.default.PropTypes.object.isRequired,
+	    handleUpdateVolume: _react2.default.PropTypes.func.isRequired,
 	    open: _react2.default.PropTypes.bool.isRequired,
-	    rooms: _react2.default.PropTypes.array.isRequired
+	    rooms: _react2.default.PropTypes.array.isRequired,
+	    maxVolume: _react2.default.PropTypes.number.isRequired
 	};
 
 /***/ },
@@ -43993,22 +44028,41 @@
 /* 442 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(443);
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = undefined;
+
+	var _MenuItem = __webpack_require__(432);
+
+	var _MenuItem2 = _interopRequireDefault(_MenuItem);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _MenuItem2.default;
 
 /***/ },
 /* 443 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports = __webpack_require__(444);
+
+/***/ },
+/* 444 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
-	var defaults = __webpack_require__(444);
-	var utils = __webpack_require__(445);
-	var dispatchRequest = __webpack_require__(446);
-	var InterceptorManager = __webpack_require__(455);
-	var isAbsoluteURL = __webpack_require__(456);
-	var combineURLs = __webpack_require__(457);
-	var bind = __webpack_require__(458);
-	var transformData = __webpack_require__(450);
+	var defaults = __webpack_require__(445);
+	var utils = __webpack_require__(446);
+	var dispatchRequest = __webpack_require__(447);
+	var InterceptorManager = __webpack_require__(456);
+	var isAbsoluteURL = __webpack_require__(457);
+	var combineURLs = __webpack_require__(458);
+	var bind = __webpack_require__(459);
+	var transformData = __webpack_require__(451);
 
 	function Axios(defaultConfig) {
 	  this.defaults = utils.merge({}, defaultConfig);
@@ -44094,7 +44148,7 @@
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(459);
+	axios.spread = __webpack_require__(460);
 
 	// Provide aliases for supported request methods
 	utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
@@ -44122,12 +44176,12 @@
 
 
 /***/ },
-/* 444 */
+/* 445 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(445);
+	var utils = __webpack_require__(446);
 
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -44194,7 +44248,7 @@
 
 
 /***/ },
-/* 445 */
+/* 446 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -44466,7 +44520,7 @@
 
 
 /***/ },
-/* 446 */
+/* 447 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -44488,10 +44542,10 @@
 	        adapter = config.adapter;
 	      } else if (typeof XMLHttpRequest !== 'undefined') {
 	        // For browsers use XHR adapter
-	        adapter = __webpack_require__(447);
+	        adapter = __webpack_require__(448);
 	      } else if (typeof process !== 'undefined') {
 	        // For node use HTTP adapter
-	        adapter = __webpack_require__(447);
+	        adapter = __webpack_require__(448);
 	      }
 
 	      if (typeof adapter === 'function') {
@@ -44507,18 +44561,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 447 */
+/* 448 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(445);
-	var buildURL = __webpack_require__(448);
-	var parseHeaders = __webpack_require__(449);
-	var transformData = __webpack_require__(450);
-	var isURLSameOrigin = __webpack_require__(451);
-	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(452);
-	var settle = __webpack_require__(453);
+	var utils = __webpack_require__(446);
+	var buildURL = __webpack_require__(449);
+	var parseHeaders = __webpack_require__(450);
+	var transformData = __webpack_require__(451);
+	var isURLSameOrigin = __webpack_require__(452);
+	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(453);
+	var settle = __webpack_require__(454);
 
 	module.exports = function xhrAdapter(resolve, reject, config) {
 	  var requestData = config.data;
@@ -44615,7 +44669,7 @@
 	  // This is only done if running in a standard browser environment.
 	  // Specifically not if we're in a web worker, or react-native.
 	  if (utils.isStandardBrowserEnv()) {
-	    var cookies = __webpack_require__(454);
+	    var cookies = __webpack_require__(455);
 
 	    // Add xsrf header
 	    var xsrfValue = config.withCredentials || isURLSameOrigin(config.url) ?
@@ -44676,12 +44730,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 448 */
+/* 449 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(445);
+	var utils = __webpack_require__(446);
 
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -44749,12 +44803,12 @@
 
 
 /***/ },
-/* 449 */
+/* 450 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(445);
+	var utils = __webpack_require__(446);
 
 	/**
 	 * Parse headers into an object
@@ -44792,12 +44846,12 @@
 
 
 /***/ },
-/* 450 */
+/* 451 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(445);
+	var utils = __webpack_require__(446);
 
 	/**
 	 * Transform the data for a request or a response
@@ -44818,12 +44872,12 @@
 
 
 /***/ },
-/* 451 */
+/* 452 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(445);
+	var utils = __webpack_require__(446);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -44892,7 +44946,7 @@
 
 
 /***/ },
-/* 452 */
+/* 453 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -44934,7 +44988,7 @@
 
 
 /***/ },
-/* 453 */
+/* 454 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -44958,12 +45012,12 @@
 
 
 /***/ },
-/* 454 */
+/* 455 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(445);
+	var utils = __webpack_require__(446);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -45017,12 +45071,12 @@
 
 
 /***/ },
-/* 455 */
+/* 456 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(445);
+	var utils = __webpack_require__(446);
 
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -45075,7 +45129,7 @@
 
 
 /***/ },
-/* 456 */
+/* 457 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45095,7 +45149,7 @@
 
 
 /***/ },
-/* 457 */
+/* 458 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45113,7 +45167,7 @@
 
 
 /***/ },
-/* 458 */
+/* 459 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45130,7 +45184,7 @@
 
 
 /***/ },
-/* 459 */
+/* 460 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45161,25 +45215,6 @@
 	  };
 	};
 
-
-/***/ },
-/* 460 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = undefined;
-
-	var _MenuItem = __webpack_require__(432);
-
-	var _MenuItem2 = _interopRequireDefault(_MenuItem);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _MenuItem2.default;
 
 /***/ }
 /******/ ]);
