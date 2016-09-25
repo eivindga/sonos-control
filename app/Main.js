@@ -9,6 +9,7 @@ import Dialog from 'material-ui/Dialog';
 import {deepOrange500} from 'material-ui/styles/colors';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
+import IconButton from 'material-ui/IconButton';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DashboardComponent from './components/dashboardComponent';
@@ -83,12 +84,6 @@ var Main  = React.createClass({
             });
           })
     }
-
-/*
-    this.setState({
-      open: true
-    });
-    */
   },
 
   handleZoneReply(response) {
@@ -98,7 +93,7 @@ var Main  = React.createClass({
     });
     return rooms;
   },
-  componentDidMount: function() {
+  loadZones: function () {
     axios.get('/zones')
         .then(this.handleZoneReply)
         .then(rooms => {
@@ -107,15 +102,28 @@ var Main  = React.createClass({
             rooms: rooms
           });
         });
-
+  },
+  handleReload: function () {
+    this.setState({
+      isLoading: true,
+    }, this.loadZones);
+  },
+  componentDidMount: function() {
+    this.loadZones();
   },
   render() {
 
     return (
         <MuiThemeProvider muiTheme={muiTheme}>
           <div style={styles.container}>
-            <h1>Sonos control panel</h1>
-            <h2>For those missing features</h2>
+            <h1>Sonos control panel
+              <IconButton
+                iconClassName="material-icons"
+                tooltip="Reload"
+                onClick={this.handleReload}
+              >autorenew</IconButton>
+            </h1>
+
             <br/>
             <DashboardComponent
             isLoading={this.state.isLoading}

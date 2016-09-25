@@ -21855,6 +21855,10 @@
 
 	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
 
+	var _IconButton = __webpack_require__(435);
+
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+
 	var _getMuiTheme = __webpack_require__(221);
 
 	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
@@ -21873,12 +21877,10 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	/**
-	 * In this file, we create a React component
-	 * which incorporates components providedby material-ui.
-	 */
-
-	var axios = __webpack_require__(443);
+	var axios = __webpack_require__(443); /**
+	                               * In this file, we create a React component
+	                               * which incorporates components providedby material-ui.
+	                               */
 
 	var iconStyles = {
 	  marginRight: 24
@@ -21947,12 +21949,6 @@
 	        });
 	      });
 	    }
-
-	    /*
-	        this.setState({
-	          open: true
-	        });
-	        */
 	  },
 
 	  handleZoneReply: function handleZoneReply(response) {
@@ -21963,7 +21959,7 @@
 	    return rooms;
 	  },
 
-	  componentDidMount: function componentDidMount() {
+	  loadZones: function loadZones() {
 	    var _this2 = this;
 
 	    axios.get('/zones').then(this.handleZoneReply).then(function (rooms) {
@@ -21972,6 +21968,14 @@
 	        rooms: rooms
 	      });
 	    });
+	  },
+	  handleReload: function handleReload() {
+	    this.setState({
+	      isLoading: true
+	    }, this.loadZones);
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.loadZones();
 	  },
 	  render: function render() {
 
@@ -21984,12 +21988,16 @@
 	        _react2.default.createElement(
 	          'h1',
 	          null,
-	          'Sonos control panel'
-	        ),
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'For those missing features'
+	          'Sonos control panel',
+	          _react2.default.createElement(
+	            _IconButton2.default,
+	            {
+	              iconClassName: 'material-icons',
+	              tooltip: 'Reload',
+	              onClick: this.handleReload
+	            },
+	            'autorenew'
+	          )
 	        ),
 	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(_dashboardComponent2.default, {
