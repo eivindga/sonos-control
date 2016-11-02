@@ -31,7 +31,9 @@
     "node-static": "~0.7.0",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
+    "react-redux": "^4.4.5",
     "react-tap-event-plugin": "^1.0.0",
+    "redux": "^3.6.0",
     "request-promise": "~1.0.2",
     "require-fu": "~1.0.0",
     "sonos-discovery": "git://github.com/eivindga/node-sonos-discovery.git#4375cce373f67d86e06f5fc2a3c3731870aec66d"

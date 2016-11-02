@@ -3,7 +3,7 @@ import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import {deepOrange500} from 'material-ui/styles/colors';
 import CircularProgress from 'material-ui/CircularProgress';
-import RoomTable from '../roomTable';
+import RoomTable from './roomTable';
 import LimitDialog from './limitDialog';
 
 function DashboardComponent (props) {

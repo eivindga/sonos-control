@@ -60,7 +60,6 @@ export default class RoomTable extends React.Component {
     handleChange = (event) => {
         this.setState({height: event.target.value});
     };
-
     render() {
         return (
             <div>

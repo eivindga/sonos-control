@@ -7,7 +7,7 @@ var HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
 
 module.exports = {
   entry: [
-    './app/index.js'
+    './app/index.jsx'
   ],
   output: {
     path: __dirname + '/static',
@@ -23,6 +23,9 @@ module.exports = {
         presets:['es2015', 'stage-0', 'react']
       }
     }]
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
   },
   plugins: [HTMLWebpackPluginConfig]
 };
